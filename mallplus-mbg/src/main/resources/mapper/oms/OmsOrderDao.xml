@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zscat.mallplus.oms.mapper.OmsOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zscat.mallplus.oms.entity.OmsOrder">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="coupon_id" property="couponId"/>
+        <result column="order_sn" property="orderSn"/>
+        <result column="create_time" property="createTime"/>
+        <result column="member_username" property="memberUsername"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="pay_amount" property="payAmount"/>
+        <result column="freight_amount" property="freightAmount"/>
+        <result column="promotion_amount" property="promotionAmount"/>
+        <result column="integration_amount" property="integrationAmount"/>
+        <result column="coupon_amount" property="couponAmount"/>
+        <result column="discount_amount" property="discountAmount"/>
+        <result column="pay_type" property="payType"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="status" property="status"/>
+        <result column="order_type" property="orderType"/>
+        <result column="delivery_company" property="deliveryCompany"/>
+        <result column="delivery_sn" property="deliverySn"/>
+        <result column="auto_confirm_day" property="autoConfirmDay"/>
+        <result column="integration" property="integration"/>
+        <result column="growth" property="growth"/>
+        <result column="promotion_info" property="promotionInfo"/>
+        <result column="bill_type" property="billType"/>
+        <result column="bill_header" property="billHeader"/>
+        <result column="bill_content" property="billContent"/>
+        <result column="bill_receiver_phone" property="billReceiverPhone"/>
+        <result column="bill_receiver_email" property="billReceiverEmail"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="receiver_post_code" property="receiverPostCode"/>
+        <result column="receiver_province" property="receiverProvince"/>
+        <result column="receiver_city" property="receiverCity"/>
+        <result column="receiver_region" property="receiverRegion"/>
+        <result column="receiver_detail_address" property="receiverDetailAddress"/>
+        <result column="note" property="note"/>
+        <result column="confirm_status" property="confirmStatus"/>
+        <result column="delete_status" property="deleteStatus"/>
+        <result column="use_integration" property="useIntegration"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="delivery_time" property="deliveryTime"/>
+        <result column="receive_time" property="receiveTime"/>
+        <result column="comment_time" property="commentTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="prepay_id" property="prepayId"/>
+        <result column="supply_id" property="supplyId"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="school_id" property="schoolId"/>
+    </resultMap>
+    <resultMap id="orderDetailMap" type="com.zscat.mallplus.oms.vo.OmsOrderDetail"
+               extends="com.zscat.mallplus.oms.mapper.OmsOrderMapper.BaseResultMap">
+        <collection property="orderItemList" columnPrefix="ot_"
+                    resultMap="com.zscat.mallplus.oms.mapper.OmsOrderItemMapper.BaseResultMap">
+        </collection>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, member_id, coupon_id, order_sn, create_time, member_username, total_amount, pay_amount, freight_amount,
+        promotion_amount, integration_amount, coupon_amount, discount_amount, pay_type, source_type, status, order_type,
+        delivery_company, delivery_sn, auto_confirm_day, integration, growth, promotion_info, bill_type, bill_header,
+        bill_content, bill_receiver_phone, bill_receiver_email, receiver_name, receiver_phone, receiver_post_code,
+        receiver_province, receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status,
+        use_integration, payment_time, delivery_time, receive_time, comment_time, modify_time, prepay_id, supply_id,
+        goods_id, goods_name, school_id
+    </sql>
+    <select id="getTimeOutOrders" resultMap="orderDetailMap">
+        SELECT
+        o.id,
+        o.order_sn,
+        o.coupon_id,
+        o.integration,
+        o.member_id,
+        o.use_integration,
+        ot.id ot_id,
+        ot.product_name ot_product_name,
+        ot.product_sku_id ot_product_sku_id,
+        ot.product_sku_code ot_product_sku_code,
+        ot.product_quantity ot_product_quantity
+        FROM
+        oms_order o
+        LEFT JOIN oms_order_item ot ON o.id = ot.order_id
+        WHERE
+        o.status = 12
+        AND date_add(NOW(), INTERVAL -#{minute} MINUTE)>o.create_time;
+    </select>
+    <select id="orderMonthStatic" resultType="Map">
+        SELECT sum(CASE DATE_FORMAT(create_time, '%m') WHEN '01' THEN pay_amount ELSE 0 END) AS a1, sum(CASE
+        DATE_FORMAT(create_time, '%m') WHEN '02' THEN pay_amount ELSE 0 END) AS a2, sum(CASE DATE_FORMAT(create_time,
+        '%m') WHEN '03' THEN pay_amount ELSE 0 END) AS a3, sum(CASE DATE_FORMAT(create_time, '%m') WHEN '04' THEN
+        pay_amount ELSE 0 END) AS a4, sum(CASE DATE_FORMAT(create_time, '%m') WHEN '05' THEN pay_amount ELSE 0 END) AS
+        a5, sum(CASE DATE_FORMAT(create_time, '%m') WHEN '06' THEN pay_amount ELSE 0 END) AS a6,
+        sum(CASE DATE_FORMAT(create_time, '%m') WHEN '07' THEN pay_amount ELSE 0 END) AS a7,
+        sum(CASE DATE_FORMAT(create_time, '%m') WHEN '08' THEN pay_amount ELSE 0 END) AS a8, sum(CASE
+        DATE_FORMAT(create_time, '%m') WHEN '09' THEN pay_amount ELSE 0 END) AS a9, sum(CASE DATE_FORMAT(create_time,
+        '%m') WHEN '10' THEN pay_amount ELSE 0 END) AS a10, sum(CASE DATE_FORMAT(create_time, '%m') WHEN '11' THEN
+        pay_amount ELSE 0 END) AS a11, sum(CASE DATE_FORMAT(create_time, '%m') WHEN '12' THEN pay_amount ELSE 0 END) AS
+        a12
+        FROM oms_order WHERE YEAR(create_time) = YEAR(#{date})
+    </select>
+    <select id="orderDayStatic" resultType="Map">
+        SELECT
+        sum(case DATE_FORMAT(create_time,'%d') when '01' then pay_amount else 0 end) as a1,
+        sum(case DATE_FORMAT(create_time,'%d') when '02' then pay_amount else 0 end) as a2,
+        sum(case DATE_FORMAT(create_time,'%d') when '03' then pay_amount else 0 end) as a3,
+        sum(case DATE_FORMAT(create_time,'%d') when '04' then pay_amount else 0 end) as a4,
+        sum(case DATE_FORMAT(create_time,'%d') when '05' then pay_amount else 0 end) as a5,
+        sum(case DATE_FORMAT(create_time,'%d') when '06' then pay_amount else 0 end) as a6,
+        sum(case DATE_FORMAT(create_time,'%d') when '07' then pay_amount else 0 end) as a7,
+        sum(case DATE_FORMAT(create_time,'%d') when '08' then pay_amount else 0 end) as a8,
+        sum(case DATE_FORMAT(create_time,'%d') when '09' then pay_amount else 0 end) as a9,
+        sum(case DATE_FORMAT(create_time,'%d') when '10' then pay_amount else 0 end) as a10,
+        sum(case DATE_FORMAT(create_time,'%d') when '11' then pay_amount else 0 end) as a11,
+        sum(case DATE_FORMAT(create_time,'%d') when '12' then pay_amount else 0 end) as a12,
+        sum(case DATE_FORMAT(create_time,'%d') when '13' then pay_amount else 0 end) as a13,
+        sum(case DATE_FORMAT(create_time,'%d') when '14' then pay_amount else 0 end) as a14,
+        sum(case DATE_FORMAT(create_time,'%d') when '15' then pay_amount else 0 end) as a15,
+        sum(case DATE_FORMAT(create_time,'%d') when '16' then pay_amount else 0 end) as a16,
+        sum(case DATE_FORMAT(create_time,'%d') when '17' then pay_amount else 0 end) as a17,
+        sum(case DATE_FORMAT(create_time,'%d') when '18' then pay_amount else 0 end) as a18,
+        sum(case DATE_FORMAT(create_time,'%d') when '19' then pay_amount else 0 end) as a19,
+        sum(case DATE_FORMAT(create_time,'%d') when '20' then pay_amount else 0 end) as a20,
+        sum(case DATE_FORMAT(create_time,'%d') when '21' then pay_amount else 0 end) as a21,
+        sum(case DATE_FORMAT(create_time,'%d') when '22' then pay_amount else 0 end) as a22,
+        sum(case DATE_FORMAT(create_time,'%d') when '23' then pay_amount else 0 end) as a23,
+        sum(case DATE_FORMAT(create_time,'%d') when '24' then pay_amount else 0 end) as a24,
+        sum(case DATE_FORMAT(create_time,'%d') when '25' then pay_amount else 0 end) as a25,
+        sum(case DATE_FORMAT(create_time,'%d') when '26' then pay_amount else 0 end) as a26,
+        sum(case DATE_FORMAT(create_time,'%d') when '27' then pay_amount else 0 end) as a27,
+        sum(case DATE_FORMAT(create_time,'%d') when '28' then pay_amount else 0 end) as a28,
+        sum(case DATE_FORMAT(create_time,'%d') when '29' then pay_amount else 0 end) as a29,
+        sum(case DATE_FORMAT(create_time,'%d') when '30' then pay_amount else 0 end) as a30,
+        sum(case DATE_FORMAT(create_time,'%d') when '31' then pay_amount else 0 end) as a31
+        FROM oms_order
+        WHERE MONTH(create_time) = MONTH(#{date})
+    </select>
+    <update id="delivery">
+        UPDATE oms_order
+        SET
+        delivery_sn = CASE id
+        <foreach collection="list" item="item">
+            WHEN #{item.orderId} THEN #{item.deliverySn}
+        </foreach>
+        END,
+        delivery_company = CASE id
+        <foreach collection="list" item="item">
+            WHEN #{item.orderId} THEN #{item.deliveryCompany}
+        </foreach>
+        END,
+        delivery_time = CASE id
+        <foreach collection="list" item="item">
+            WHEN #{item.orderId} THEN now()
+        </foreach>
+        END,
+        `status` = CASE id
+        <foreach collection="list" item="item">
+            WHEN #{item.orderId} THEN 3
+        </foreach>
+        END
+        WHERE
+        id IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item.orderId}
+        </foreach>
+        AND `status` = 2
+    </update>
+    <update id="updateSkuStock">
+        UPDATE pms_sku_stock
+        SET
+        stock = CASE id
+        <foreach collection="itemList" item="item">
+            WHEN #{item.productSkuId} THEN stock - #{item.productQuantity}
+        </foreach>
+        END,
+        lock_stock = CASE id
+        <foreach collection="itemList" item="item">
+            WHEN #{item.productSkuId} THEN lock_stock - #{item.productQuantity}
+        </foreach>
+        END
+        WHERE
+        id IN
+        <foreach collection="itemList" item="item" separator="," open="(" close=")">
+            #{item.productSkuId}
+        </foreach>
+    </update>
+
+
+    <update id="updateOrderStatus">
+        update oms_order
+        set status=#{status}
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="releaseSkuStockLock">
+        UPDATE pms_sku_stock
+        SET
+        lock_stock = CASE id
+        <foreach collection="itemList" item="item">
+            WHEN #{item.productSkuId} THEN lock_stock - #{item.productQuantity}
+        </foreach>
+        END
+        WHERE
+        id IN
+        <foreach collection="itemList" item="item" separator="," open="(" close=")">
+            #{item.productSkuId}
+        </foreach>
+    </update>
+
+    <select id="listOrderGroupByMemberId" resultType="com.zscat.mallplus.oms.vo.OrderStstic">
+        select count(id) totalCount ,sum(pay_amount) totalPayAmount,member_id memberId from oms_order
+        where 9>status group by member_id
+    </select>
+
+    <select id="listByDate" resultMap="BaseResultMap">
+        select id, pay_amount,status from oms_order where
+        <if test="type==1">
+            date_format(create_time,'%y%m%d') = date_format(#{date},'%y%m%d')
+        </if>
+        <if test="type==2">
+            date_format(create_time,'%y%m') = date_format(#{date},'%y%m')
+        </if>
+
+    </select>
+
+</mapper>

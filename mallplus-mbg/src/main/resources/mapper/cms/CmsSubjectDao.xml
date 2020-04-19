@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zscat.mallplus.cms.mapper.CmsSubjectMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zscat.mallplus.cms.entity.CmsSubject">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="title" property="title"/>
+        <result column="pic" property="pic"/>
+        <result column="product_count" property="productCount"/>
+        <result column="recommend_status" property="recommendStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="collect_count" property="collectCount"/>
+        <result column="read_count" property="readCount"/>
+        <result column="comment_count" property="commentCount"/>
+        <result column="album_pics" property="albumPics"/>
+        <result column="description" property="description"/>
+        <result column="show_status" property="showStatus"/>
+        <result column="content" property="content"/>
+        <result column="forward_count" property="forwardCount"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="area_id" property="areaId"/>
+        <result column="school_id" property="schoolId"/>
+        <result column="member_id" property="memberId"/>
+        <result column="reward" property="reward"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category_id, title, pic, product_count, recommend_status, create_time, collect_count, read_count,
+        comment_count, album_pics, description, show_status, content, forward_count, category_name, area_id, school_id,
+        member_id, reward
+    </sql>
+
+    <select id="countByToday" resultType="java.lang.Integer">
+        select count(1) from cms_subject where member_id =#{memberId} and DATE_FORMAT(create_time,'%Y-%m-%d') =
+        DATE_FORMAT(now(),'%Y-%m-%d')
+    </select>
+
+
+    <select id="listTimelinePost" resultType="com.zscat.mallplus.vo.timeline.TimelinePost">
+        select a.id,a.title,a.description,a.create_time from cms_subject a where DATE_FORMAT(a.create_time,'%Y')=#{year}
+        and DATE_FORMAT(a.create_time,'%m')=#{month}
+        t order by t.create_time desc
+    </select>
+
+    <select id="listTimeline" resultType="com.zscat.mallplus.vo.timeline.Timeline">
+        select t.year,count(t.year) as count from (
+        select a.id,a.title,a.description,a.create_time,DATE_FORMAT(a.create_time,'%Y') as year from cms_subject a
+        ) t group by t.year order by t.year desc
+    </select>
+
+    <!--获取文章的时间归档列表 -->
+    <select id="articleArchiveList" resultType="java.util.Map">
+        select DATE_FORMAT(create_time,'%Y年%m月') create_time,count(id) count from cms_subject group by
+        DATE_FORMAT(create_time,'%Y年%m月') ORDER BY create_time desc
+
+    </select>
+    <!--按时间归档加载文章-->
+    <select id="loadArticleByArchive" resultType="com.zscat.mallplus.cms.entity.CmsSubject">
+        select * from cms_subject where DATE_FORMAT(create_time,'%Y年%m月')=#{createTime}
+    </select>
+
+</mapper>

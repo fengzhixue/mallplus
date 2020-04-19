@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zscat.mallplus.pms.mapper.PmsSmallNaviconCategoryMapper">
+    <resultMap id="BaseResultMap" type="com.zscat.mallplus.pms.entity.PmsSmallNaviconCategory">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" property="title"/>
+        <result column="icon" property="icon"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="sort" property="sort"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`title`,`icon`,`summary`,`content`,`sort`
+    </sql>
+
+    <select id="get" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pms_small_navicon_category where id = #{value}
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pms_small_navicon_category
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="title != null and title != ''">and title = #{title}</if>
+            <if test="icon != null and icon != ''">and icon = #{icon}</if>
+            <if test="summary != null and summary != ''">and summary = #{summary}</if>
+            <if test="content != null and content != ''">and content = #{content}</if>
+            <if test="sort != null and sort != ''">and sort = #{sort}</if>
+        </where>
+
+    </select>
+    <select id="count" resultType="int">
+        select count(*) from pms_small_navicon_category
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="title != null and title != ''">and title = #{title}</if>
+            <if test="icon != null and icon != ''">and icon = #{icon}</if>
+            <if test="summary != null and summary != ''">and summary = #{summary}</if>
+            <if test="content != null and content != ''">and content = #{content}</if>
+            <if test="sort != null and sort != ''">and sort = #{sort}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.zscat.mallplus.pms.entity.PmsSmallNaviconCategory" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into pms_small_navicon_category
+        (
+        `title`,
+        `icon`,
+        `summary`,
+        `content`,
+        `sort`
+        )
+        values
+        (
+        #{title},
+        #{icon},
+        #{summary},
+        #{content},
+        #{sort}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.zscat.mallplus.pms.entity.PmsSmallNaviconCategory">
+        update pms_small_navicon_category
+        <set>
+            <if test="title != null">`title` = #{title},</if>
+            <if test="icon != null">`icon` = #{icon},</if>
+            <if test="summary != null">`summary` = #{summary},</if>
+            <if test="content != null">`content` = #{content},</if>
+            <if test="sort != null">`sort` = #{sort}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete from pms_small_navicon_category where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from pms_small_navicon_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

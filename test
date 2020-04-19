@@ -1,0 +1,214 @@
+server {
+    listen    80;
+    server_name example.com;
+
+    location ^~ /web {
+        proxy_pass     http://localhost:8081;
+        proxy_set_header  Host       $host;
+        proxy_set_header  X-Real-IP    $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location ^~ /admin {
+        proxy_pass     http://localhost:8085;
+        proxy_set_header  Host       $host;
+        proxy_set_header  X-Real-IP    $remote_addr;
+        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location ^~ /h5 {
+       proxy_pass     http://localhost:8082;
+       proxy_set_header  Host       $host;
+       proxy_set_header  X-Real-IP    $remote_addr;
+       proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+
+http://shop.legendshop.cn/s/system/paySite
+
+
+USE information_schema;
+select table_name,table_rows from tables where TABLE_SCHEMA = 'mallplus1' order by table_rows desc;
+
+ if(type===1){
+          return 'ios首页轮播';
+        }else if(type===2){
+          return 'android首页轮播';
+        }
+        else if(type===3){
+            return 'pc首页轮播';
+        }else if(type===4){
+            return 'h5首页轮播';
+        }else if(type===5){
+            return '小程序首页轮播';
+        }
+
+
+沈兄~能把数据抓出来吗？https://map.beijing.gov.cn/category?categoryId=xx
+
+
+SELECT * from pms_product where product_attribute_category_id=1 ;
+SELECT * from pms_sku_stock where product_id=26;
+SELECT * from pms_product_attribute_value  where product_id=26;
+SELECT * from pms_product_attribute  where product_attribute_category_id=3;
+SELECT * from pms_product_attribute where id in (SELECT product_attribute_id from pms_product_attribute_value  where product_id=26);
+SELECT * from pms_product_category_attribute_relation where product_attribute_id in (SELECT product_attribute_id from pms_product_attribute_value  where product_id=26);;
+
+SELECT * from pms_product_attribute_category where id =3;
+SELECT * from pms_product_category where id=19;
+
+SELECT * from pms_product_full_reduction where product_id=26;
+SELECT * from pms_product_ladder where product_id=26;
+SELECT * from pms_product_operate_log where product_id=26;
+SELECT * from pms_product_vertify_record where product_id=26;
+
+SELECT * from pms_product_attribute ;
+SELECT * from pms_product_attribute_category;
+
+SELECT * from ums_member ;
+SELECT * from sms_home_advertise;
+SELECT * from ums_member_receive_address ;
+
+select * from oms_cart_item where member_id=17;
+select * from oms_order where member_id=17;
+select * from oms_order_item where order_id=51;
+SELECT * from sms_coupon;
+SELECT * from sms_coupon_history;
+SELECT * from sms_coupon_product_relation;
+SELECT * from sms_coupon_product_category_relation;
+
+SELECT * from oms_order_setting;
+
+
+update sms_flash_promotion_product_relation set flash_promotion_price =196 where  flash_promotion_price is null
+SELECT * from sys_permission where type=1 ;
+
+SELECT id, name, start_time, end_time FROM sms_flash_promotion_session WHERE sms_flash_promotion_session.store_id = 1
+ AND status = 1；
+
+SELECT * from sms_flash_promotion_product_relation ；
+
+-- update sys_permission set `status`=1
+SELECT * from sms_flash_promotion_session;
+
+接口需求
+1、会员获得的君米排位赛。描述：获得的君米是会员发帖其他人给予的打赏（自身购买的除外），每篇文章每位会员只能打赏一次。
+2、后台设计两个奖品栏，第二栏为VIP会员追加的奖励。
+3、此活动是所有会员的评选，设计关系的关联。
+4、排位名次前端需求按君米数实时更新。
+
+
+
+http://ext.dcloud.net.cn/plugin?id=214
+http://ext.dcloud.net.cn/plugin?id=465
+http://ext.dcloud.net.cn/plugin?id=232
+http://ext.dcloud.net.cn/plugin?id=271
+http://ext.dcloud.net.cn/plugin?id=467
+http://ext.dcloud.net.cn/plugin?id=235
+http://ext.dcloud.net.cn/plugin?id=434 水印
+http://ext.dcloud.net.cn/plugin?id=417 物流
+http://ext.dcloud.net.cn/plugin?id=305 优惠券
+http://ext.dcloud.net.cn/plugin?id=299 城市选择
+http://ext.dcloud.net.cn/?page=33 评价模版
+http://ext.dcloud.net.cn/plugin?id=214 圆环统计
+http://ext.dcloud.net.cn/plugin?id=104 cms
+
+订单统计
+select DATE_FORMAT(create_time, '%Y-%m-%d') day1,sum(pay_amount) FROM  oms_order group by day1  HAVING day1>='2019-08-01'  ORDER BY day1
+
+
+h5
+alipay  WAP
+isWeiXin wechatpay JSAPI_OFFICIAL
+wechatpay MWEB
+
+
+
+####项目一nginx配置文件
+
+server {
+
+        #访问端口(页面访问端口)
+        listen 80;
+        server_name www.yjlive.cn;
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+            root html;
+        }
+
+        location / {
+            # 前端工程根目录
+            root /root/jm/h5;
+            index index.html;
+        }
+
+
+		#没有跨域需求可以不配
+        #代理路径 地址是以spi开头的 ‘/api开头的都走这个代理’
+        # 将前端访问的后台端口变更为‘前台id:前台端口/api/xxx/xxx’
+
+        location /api {
+
+            #正则表达式匹配路径
+
+            rewrite  ^/api/(.*)$ /$1 break;
+
+            include  uwsgi_params;
+
+            #后端端口(后端最终访问的端口)
+
+            proxy_pass   http://39.106.212.32:8081 ;
+
+        }
+        location @router {
+        rewrite ^.*$ /index.html last;
+        }
+    }
+
+
+
+	server {
+
+        #访问端口(页面访问端口)
+        listen 80;
+        server_name www.yjlive.cn;
+		#root /usr/local/www/;
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+            root html;
+        }
+    ##项目一，同过域名直接访问
+		location / {
+            #前端工程根目录
+            alias /root/jm/h5/;
+            index index.html;
+        }
+    ##项目二，同过域名.com/YYY访问
+        location /h5 {
+            # 前端工程根目录
+            alias  /root/jm/mall/;
+			try_files $uri $uri/ @router;
+			index index.html;
+        }
+		# 没有跨域需求可以不配
+        #代理路径 地址是以spi开头的 ‘/api开头的都走这个代理’
+        # 将前端访问的后台端口变更为‘前台id:前台端口/api/xxx/xxx’
+        location /api {
+
+            #正则表达式匹配路径
+
+            rewrite  ^/api/(.*)$ /$1 break;
+
+            include  uwsgi_params;
+
+            #后端端口(后端最终访问的端口)
+
+            proxy_pass   http://39.106.212.32:8081 ;
+
+        }
+        location @router {
+        rewrite ^.*$ /index.html last;
+        }
+    }
+

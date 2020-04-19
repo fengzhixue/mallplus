@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zscat.mallplus.pms.mapper.PmsFavoriteMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zscat.mallplus.pms.entity.PmsFavorite">
+        <id column="id" property="id"/>
+        <result column="addTime" property="addTime"/>
+        <result column="type" property="type"/>
+        <result column="obj_id" property="objId"/>
+        <result column="store_id" property="storeId"/>
+        <result column="user_id" property="userId"/>
+        <result column="name" property="name"/>
+        <result column="meno1" property="meno1"/>
+        <result column="meno2" property="meno2"/>
+        <result column="meno3" property="meno3"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, addTime, type, obj_id, store_id, user_id, name, meno1, meno2, meno3
+    </sql>
+
+</mapper>

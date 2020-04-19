@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zscat.mallplus.ums.mapper.SysAppletSetMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zscat.mallplus.ums.entity.SysAppletSet">
+        <id column="store_id" property="storeId"/>
+        <result column="appid" property="appid"/>
+        <result column="appsecret" property="appsecret"/>
+        <result column="mchid" property="mchid"/>
+        <result column="paySignKey" property="paySignKey"/>
+        <result column="certName" property="certName"/>
+        <result column="notifyUrl" property="notifyUrl"/>
+        <result column="templateId1" property="templateId1"/>
+        <result column="templateId2" property="templateId2"/>
+        <result column="templateId3" property="templateId3"/>
+        <result column="templateId4" property="templateId4"/>
+        <result column="templateId5" property="templateId5"/>
+        <result column="templateId6" property="templateId6"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        appid, appsecret, mchid, paySignKey, certName, notifyUrl, templateId1, templateId2, templateId3, templateId4,
+        templateId5, templateId6, store_id
+    </sql>
+
+</mapper>

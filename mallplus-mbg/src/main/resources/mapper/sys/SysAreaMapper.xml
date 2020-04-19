@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zscat.mallplus.sys.mapper.SysAreaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zscat.mallplus.sys.entity.SysArea">
+        <result column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="deep" property="deep"/>
+        <result column="name" property="name"/>
+        <result column="pinyin_prefix" property="pinyinPrefix"/>
+        <result column="pinyin" property="pinyin"/>
+        <result column="ext_id" property="extId"/>
+        <result column="ext_name" property="extName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, pid, deep, name, pinyin_prefix, pinyin, ext_id, ext_name
+    </sql>
+
+    <resultMap id="listWithChildrenMap" type="com.zscat.mallplus.sys.vo.AreaWithChildrenItem"
+               extends="BaseResultMap">
+        <collection property="children" resultMap="BaseResultMap"
+                    columnPrefix="child_"></collection>
+    </resultMap>
+
+
+    <select id="listWithChildren" resultMap="listWithChildrenMap">
+        select
+        c1.id,
+        c1.name,
+        c2.id child_id,
+        c2.name child_name
+        from sys_area c1 left join sys_area c2 on c1.id = c2.pid
+        where c1.deep = 0
+    </select>
+
+</mapper>
